@@ -1,0 +1,14 @@
+{
+    "name": "vendor/framwork-php",
+    "description": "PHP Framwork For Web Application",
+    "type": "library",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Gagik Harutyunyan",
+            "email": "gagharutyunyan1993@gmail.com"
+        }
+    ],
+    "minimum-stability": "alpha",
+    "require": {}
+}
