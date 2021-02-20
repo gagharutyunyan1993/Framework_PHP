@@ -1,22 +1,35 @@
 {
     "name": "vendor/framwork-php",
     "description": "PHP Framwork For Web Application",
+    "keywords": ["framwork","php"],
     "type": "library",
     "license": "MIT",
+    "readme": "",
+    "time": "",
+    "support": {
+        "issues": "https://github.com/gagharutyunyan1993/Framework_PHP/issues",
+        "source": "https://github.com/gagharutyunyan1993/Framework_PHP"
+    },
     "authors": [
         {
             "name": "Gagik Harutyunyan",
-            "email": "gagharutyunyan1993@gmail.com"
+            "email": "gagharutyunyan1993@gmail.com",
+            "role": "Developer"
         }
     ],
     "minimum-stability": "alpha",
     "require": {
+        "php": "^7.4.2|^8.0",
         "ext-mbstring": "*",
-        "ext-iconv": "*"
+        "ext-iconv": "*",
+        "ext-pdo": "*",
+        "ext-json": "*",
+        "ext-curl": "*",
+        "ext-simplexml": "*"
     },
     "autoload": {
         "psr-4": {
-            "App\\": "app/"
+            "Cerberus\\": "src/Cerberus"
         }
     },
     "autoload-dev": {
