@@ -80,16 +80,6 @@ class Router implements RouterInterface
         return $namespace;
     }
 
-    public function transformUpperCamelCase(string $string): string
-    {
-        return str_replace(" ", '', ucwords(str_replace('-', ' ', $string)));
-    }
-
-    public function transformCamelCase(string $string): string
-    {
-        return lcfirst($this->transformUpperCamelCase($string));
-    }
-
     /**
      * Match the route to the routes in the routing table, setting the $this->params property
      * if a route is found
@@ -111,6 +101,16 @@ class Router implements RouterInterface
             }
         }
         return false;
+    }
+
+    public function transformUpperCamelCase(string $string): string
+    {
+        return str_replace(" ", '', ucwords(str_replace('-', ' ', $string)));
+    }
+
+    public function transformCamelCase(string $string): string
+    {
+        return lcfirst($this->transformUpperCamelCase($string));
     }
 
 }
