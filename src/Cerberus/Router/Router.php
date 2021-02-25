@@ -103,14 +103,25 @@ class Router implements RouterInterface
         return false;
     }
 
+    /**
+     * Uppercase the first character of each word
+     *
+     * @param string $string
+     * @return string
+     */
     public function transformUpperCamelCase(string $string): string
     {
         return str_replace(" ", '', ucwords(str_replace('-', ' ', $string)));
     }
 
+    /**
+     * Make a string's first character lowercase
+     *
+     * @param string $string
+     * @return string
+     */
     public function transformCamelCase(string $string): string
     {
         return lcfirst($this->transformUpperCamelCase($string));
     }
-
 }
