@@ -51,8 +51,8 @@ class DatabaseConnection implements DatabaseConnectionInterface
                 $this->credentials['password'],
                 $params
             );
-        } catch(PDOException $expection) {
-            throw new DatabaseConnectionException($expection->getMessage(), (int)$expection->getCode());
+        } catch(PDOException $exception) {
+            throw new DatabaseConnectionException($exception->getMessage(), (int)$exception->getCode());
         }
 
         return $this->dbh;
@@ -67,6 +67,4 @@ class DatabaseConnection implements DatabaseConnectionInterface
     {
         $this->dbh = null;
     }
-
-
 }
