@@ -6,42 +6,8 @@ namespace Cerberus\CerberOrm\QueryBuilder;
 
 use Cerberus\CerberOrm\QueryBuilder\Exception\QueryBuilderInvalidArgumentException;
 
-class QueryBuilder implements QueryBuilderInterface
+class QueryBuilder extends AbstractQueryBuilder
 {
-    /**
-     * @var array
-     */
-    protected array $key;
-
-    /**
-     * @var string
-     */
-    protected string $sqlQuery;
-
-    protected const SQL_DEFAULT = [
-        'conditions' => [],
-        'selectors' => [],
-        'replace' => false,
-        'distinct' => false,
-        'from' => [],
-        'where' => null,
-        'and' => [],
-        'or' => [],
-        'orderBy' => [],
-        'fields' => [],
-        'primary_key' => '',
-        'table' => '',
-        'type' => '',
-        'raw' => ''
-    ];
-
-    protected const QUERY_TYPES = [
-        'insert',
-        'select',
-        'update',
-        'delete',
-        'raw'
-    ];
 
     /**
      * Main constructor class
@@ -50,77 +16,50 @@ class QueryBuilder implements QueryBuilderInterface
      */
     public function __construct()
     {
-
+        parent::__construct();
     }
 
-    /**
-     * TODO
-     *
-     * @param array $args
-     * @return $this
-     */
-    public function buildQuery(array $args = []): self
+    public function buildQuery(array $args = []) : self
     {
         if (count($args) < 0) {
-            throw new QueryBuilderInvalidArgumentException();
+            throw new BaseInvalidArgumentException('Your BuildQuery method has no defined argument. Please fix this');
         }
-
-        $args = array_merge(self::SQL_DEFAULT, $args);
-        $this->key = $args;
+        $arg = array_merge(self::SQL_DEFAULT, $args);
+        $this->key = $arg;
         return $this;
     }
 
-    /**
-     * TODO
-     *
-     * @param string $type
-     * @return bool
-     */
-    private function isQueryTypeValid(string $type): bool
-    {
-        if (in_array($type, self::QUERY_TYPES)) {
-            return true;
-        }
-        return false;
-    }
-
-    /**
-     * @inheritDoc
-     */
-    public function insertQuery()
+    public function insertQuery() : string
     {
         if ($this->isQueryTypeValid('insert')) {
             if (is_array($this->key['fields']) && count($this->key['fields']) > 0) {
                 $index = array_keys($this->key['fields']);
-                $value = array(implode(', ', $index), ":" . implode(", :", $index));
-                $this->sqlQuery = "INSERT INTO {$this->key['table']} ({$value[0]}) VALUES ({$value[1]})";
+                $value = array(implode(', ', $index), ":" . implode(', :', $index));
+                $this->sqlQuery = "INSERT INTO {$this->key['table']} ({$value[0]}) VALUES({$value[1]})";
                 return $this->sqlQuery;
             }
         }
         return false;
     }
 
-    /**
-     * @inheritDoc
-     */
-    public function selectQuery()
+    public function selectQuery() : string
     {
         if ($this->isQueryTypeValid('select')) {
             $selectors = (!empty($this->key['selectors'])) ? implode(", ", $this->key['selectors']) : '*';
             $this->sqlQuery = "SELECT {$selectors} FROM {$this->key['table']}";
+
             $this->sqlQuery = $this->hasConditions();
             return $this->sqlQuery;
+
         }
         return false;
     }
 
-    /**
-     * @inheritDoc
-     */
-    public function updateQuery()
+    public function updateQuery() : string
     {
         if ($this->isQueryTypeValid('update')) {
             if (is_array($this->key['fields']) && count($this->key['fields']) > 0) {
+                $values = '';
                 foreach ($this->key['fields'] as $field) {
                     if ($field !== $this->key['primary_key']) {
                         $values .= $field . " = :" . $field . ", ";
@@ -140,48 +79,62 @@ class QueryBuilder implements QueryBuilderInterface
         return false;
     }
 
-    /**
-     * @inheritDoc
-     */
-    public function deleteQuery()
+    public function deleteQuery() : string
     {
         if ($this->isQueryTypeValid('delete')) {
             $index = array_keys($this->key['conditions']);
-            $this->sqlQuery = "DELETE {$this->key['table']} WHERE {$index[0]} = :{$index[0]} LIMIT 1";
+            $this->sqlQuery = "DELETE FROM {$this->key['table']} WHERE {$index[0]} = :{$index[0]} LIMIT 1";
             $bulkDelete = array_values($this->key['fields']);
             if (is_array($bulkDelete) && count($bulkDelete) > 1) {
                 for ($i = 0; $i < count($bulkDelete); $i++) {
                     $this->sqlQuery = "DELETE FROM {$this->key['table']} WHERE {$index[0]} = :{$index[0]}";
                 }
             }
+
             return $this->sqlQuery;
         }
         return false;
     }
 
-    /**
-     * @inheritDoc
-     */
-    public function searchQuery()
+    public function searchQuery() : string
     {
-        // TODO: Implement searchQuery() method.
+        if ($this->isQueryTypeValid('search ')) {
+            if (is_array($this->key['selectors']) && $this->key['selectors'] != '') {
+                $this->sqlQuery = "SELECT * FROM {$this->key['table']} WHERE ";
+                if ($this->has('selectors')) {
+                    $values = [];
+                    foreach ($this->key['selectors'] as $selector) {
+                        $values[] = $selector . " LIKE " . "{$selector}";
+                    }
+                    if (count($this->key['selectors']) >= 1) {
+                        $this->sqlQuery .= implode(" OR ", $values);
+                    }
+                }
+                //$this->sqlQuery .= $this->orderByQuery();
+                //$this->sqlQuery .= $this->queryOffset();
+            }
+            return $this->sqlQuery;
+        }
+        return false;
     }
 
-    /**
-     * @inheritDoc
-     */
-    public function rawQuery()
+    public function rawQuery(): string
     {
-        // TODO: Implement rawQuery() method.
+        if ($this->isQueryTypeValid('raw')) {
+            $this->sqlQuery = $this->key['raw'];
+
+            return $this->sqlQuery;
+        }
+        return false;
     }
 
     private function hasConditions()
     {
-        if (isset($this->key['conditions']) && $this->key['conditions'] != '') {
+        if (isset($this->key['conditions']) && $this->key['conditions'] !='') {
             if (is_array($this->key['conditions'])) {
                 $sort = [];
                 foreach (array_keys($this->key['conditions']) as $where) {
-                    if (isset($where) && $where != '') {
+                    if (isset($where) && $where !='') {
                         $sort[] = $where . " = :" . $where;
                     }
                 }
@@ -192,15 +145,8 @@ class QueryBuilder implements QueryBuilderInterface
         } else if (empty($this->key['conditions'])) {
             $this->sqlQuery = " WHERE 1";
         }
-//        $this->sqlQuery .= $this->orderByQuery();
-//        $this->sqlQuery .= $this->queryOffset();
-        if(isset($this->key['orderBy']) && $this->key['orderBy'] != "")
-        {
-            $this->sqlQuery .= " ORDER BY " . $this->key['orderBy'] . " ";
-        }
-        if(isset($this->key['limit']) && $this->key['offset'] != -1){
-            $this->sqlQuery .= " LIMIT :offset, :limit";
-        }
+        //$this->sqlQuery .= $this->orderByQuery();
+        //$this->sqlQuery .= $this->queryOffset();
 
         return $this->sqlQuery;
     }
