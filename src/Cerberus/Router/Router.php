@@ -112,5 +112,4 @@ class Router implements RouterInterface
     {
         return lcfirst($this->transformUpperCamelCase($string));
     }
-
 }

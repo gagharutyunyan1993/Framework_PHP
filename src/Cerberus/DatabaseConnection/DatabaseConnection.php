@@ -60,11 +60,11 @@ class DatabaseConnection implements DatabaseConnectionInterface
 
     /**
      * @inheritDoc
+     *
+     * @return void
      */
     public function close() : void
     {
         $this->dbh = null;
     }
-
-
 }
