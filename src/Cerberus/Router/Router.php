@@ -4,7 +4,8 @@ declare(strict_types=1);
 
 namespace Cerberus\Router;
 
-use Cerberus\Router\RouterInterface;
+use Cerberus\Router\Exception\RouterBadMethodCallException;
+use Exception;
 
 class Router implements RouterInterface
 {
@@ -53,13 +54,13 @@ class Router implements RouterInterface
                 if (is_callable($controllerObject, $action)) {
                     $controllerObject->$action();
                 } else {
-                    throw new \Exception();
+                    throw new RouterBadMethodCallException();
                 }
             } else {
-                throw new \Exception();
+                throw new Exception();
             }
         } else {
-            throw new \Exception();
+            throw new Exception();
         }
     }
 

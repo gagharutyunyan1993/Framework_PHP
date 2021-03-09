@@ -4,59 +4,57 @@ declare(strict_types=1);
 
 namespace Cerberus\CerberOrm\QueryBuilder;
 
+use Cerberus\CerberOrm\QueryBuilder\Exception\QueryBuilderException;
+
 interface QueryBuilderInterface
 {
+
     /**
      * Insert query string
-     * Function return false or string
      *
-     * @return mixed
+     * @return string
      * @throws QueryBuilderException
      */
-    public function insertQuery();
+    public function insertQuery() : string;
 
     /**
      * Select query string
-     * Function return false or string
      *
-     * @return mixed
+     * @return string
      * @throws QueryBuilderException
      */
-    public function selectQuery();
+    public function selectQuery() : string;
 
     /**
      * Update query string
-     * Function return false or string
      *
-     * @return mixed
+     * @return string
      * @throws QueryBuilderException
      */
-    public function updateQuery();
+    public function updateQuery() : string;
 
     /**
      * Delete query string
-     * Function return false or string
      *
-     * @return mixed
+     * @return string
      * @throws QueryBuilderException
      */
-    public function deleteQuery();
+    public function deleteQuery() : string;
 
     /**
      * Search|Select query string
-     * Function return false or string
      *
-     * @return mixed
+     * @return string
      * @throws QueryBuilderException
      */
-    public function searchQuery();
+    public function searchQuery() : string;
 
     /**
      * Raw query string
-     * Function return false or string
      *
-     * @return mixed
+     * @return string
      * @throws QueryBuilderException
      */
-    public function rawQuery();
+    public function rawQuery() : string;
+
 }

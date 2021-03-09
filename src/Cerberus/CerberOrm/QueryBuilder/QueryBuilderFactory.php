@@ -8,29 +8,35 @@ use Cerberus\CerberOrm\QueryBuilder\Exception\QueryBuilderException;
 
 class QueryBuilderFactory
 {
+
     /**
      * Main constructor method
      *
      * @return void
      */
     public function __construct()
+    { }
+
+    public function __create(string $queryBuilderString) : QueryBuilderInterface
     {
-
+        $queryBuilderObject = new $queryBuilderString();
+        if (!$queryBuilderString instanceof QueryBuilderInterface) {
+            throw new QueryBuilderException($queryBuilderString . ' is not a valid Query builder object.');
+        }
+        return $queryBuilderObject;
     }
-
     /**
-     * TODO
+     * Create the QueryBuilder object
      *
      * @param string $queryBuilderString
      * @return QueryBuilderInterface
      */
-    public function create(string $queryBuilderString): QueryBuilderInterface
+    public function create(string $queryBuilderString) : QueryBuilderInterface
     {
-           $queryBuilderObject = new $queryBuilderString();
-           if($queryBuilderString instanceof QueryBuilderInterface)
-           {
-               throw new QueryBuilderException($queryBuilderString . " is not a valid Query");
-           }
-           return new QueryBuilder();
+        $queryBuilderObject = new $queryBuilderString();
+        if (!$queryBuilderObject instanceof QueryBuilderInterface) {
+            throw new QueryBuilderException($queryBuilderString . ' is not a valid Query builder object.');
+        }
+        return $queryBuilderObject;
     }
 }

@@ -33,7 +33,7 @@ class DataMapper implements DataMapperInterface
     }
 
     /**
-     * TODO
+     * TODO COMMENT
      *
      * @param $value
      * @param string|null $errorMessage
@@ -47,7 +47,7 @@ class DataMapper implements DataMapperInterface
     }
 
     /**
-     * TODO
+     * TODO COMMENT
      *
      * @param $value
      * @param string|null $errorMessage
@@ -147,8 +147,7 @@ class DataMapper implements DataMapperInterface
      */
     public function numRows(): int
     {
-        if($this->stmt)
-        {
+        if ($this->stmt) {
             return $this->stmt->rowCount();
         }
     }
@@ -168,8 +167,7 @@ class DataMapper implements DataMapperInterface
      */
     public function result(): object
     {
-        if($this->stmt)
-        {
+        if ($this->stmt) {
             return $this->stmt->fetch(PDO::FETCH_OBJ);
         }
     }
@@ -179,27 +177,25 @@ class DataMapper implements DataMapperInterface
      */
     public function results(): array
     {
-        if($this->stmt)
-        {
+        if ($this->stmt) {
             return $this->stmt->fetchAll();
         }
     }
 
     /**
      * @inheritDoc
-     * @return int
      * @throws Throwable
      */
     public function getLastId(): int
     {
         try {
-            if($this->dbh->open()){
+            if ($this->dbh->open()) {
                 $lastID = $this->dbh->open()->lastInsertId();
-                if(!empty($lastID)){
+                if (!empty($lastID)) {
                     return intval($lastID);
                 }
             }
-        }catch (Throwable $throwable){
+        } catch (Throwable $throwable) {
             throw $throwable;
         }
     }
@@ -210,5 +206,34 @@ class DataMapper implements DataMapperInterface
     public function column()
     {
         if ($this->stmt) return $this->stmt->fetchColumn();
+    }
+
+    /**
+     * TODO Comment
+     *
+     * @param array $conditions
+     * @param array $parameters
+     * @return array
+     */
+    public function buildQueryParameters(array $conditions = [], array $parameters = [])
+    {
+        return (!empty($parameters) || (!empty($conditions)) ? array_merge($conditions, $parameters) : $parameters);
+    }
+
+    /**
+     * TODO Comment
+     *
+     * @param string $sqlQuery
+     * @param array $parameters
+     * @return DataMapperInterface|null
+     * @throws Throwable
+     */
+    public function persist(string $sqlQuery, array $parameters)
+    {
+        try {
+            return $this->prepare($sqlQuery)->bindParameters($parameters);
+        } catch (Throwable $throwable) {
+            throw $throwable;
+        }
     }
 }
