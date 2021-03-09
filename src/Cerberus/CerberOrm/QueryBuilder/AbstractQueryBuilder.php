@@ -29,7 +29,6 @@ abstract class AbstractQueryBuilder implements QueryBuilderInterface
         'table' => '',
         'type' => '',
         'raw' => '',
-
         'table_join' => '',
         'join_key' => '',
         'join' => []
@@ -81,5 +80,4 @@ abstract class AbstractQueryBuilder implements QueryBuilderInterface
     {
         return isset($this->key[$key]);
     }
-
 }

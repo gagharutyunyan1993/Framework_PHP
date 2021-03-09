@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace Cerberus\CerberOrm\QueryBuilder;
 
+use Cerberus\CerberOrm\QueryBuilder\Exception\QueryBuilderException;
+
 interface QueryBuilderInterface
 {
 

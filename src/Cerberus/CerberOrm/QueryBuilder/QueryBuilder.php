@@ -4,8 +4,6 @@ declare(strict_types=1);
 
 namespace Cerberus\CerberOrm\QueryBuilder;
 
-use Cerberus\CerberOrm\QueryBuilder\Exception\QueryBuilderInvalidArgumentException;
-
 class QueryBuilder extends AbstractQueryBuilder
 {
 
@@ -19,6 +17,7 @@ class QueryBuilder extends AbstractQueryBuilder
         parent::__construct();
     }
 
+
     public function buildQuery(array $args = []) : self
     {
         if (count($args) < 0) {
@@ -29,6 +28,10 @@ class QueryBuilder extends AbstractQueryBuilder
         return $this;
     }
 
+    /**
+     * TODO Throw Exception
+     * @inheritDoc
+     */
     public function insertQuery() : string
     {
         if ($this->isQueryTypeValid('insert')) {
@@ -39,9 +42,12 @@ class QueryBuilder extends AbstractQueryBuilder
                 return $this->sqlQuery;
             }
         }
-        return false;
     }
 
+    /**
+     * TODO Throw Exception
+     * @inheritDoc
+     */
     public function selectQuery() : string
     {
         if ($this->isQueryTypeValid('select')) {
@@ -50,11 +56,13 @@ class QueryBuilder extends AbstractQueryBuilder
 
             $this->sqlQuery = $this->hasConditions();
             return $this->sqlQuery;
-
         }
-        return false;
     }
 
+    /**
+     * TODO Throw Exception
+     * @inheritDoc
+     */
     public function updateQuery() : string
     {
         if ($this->isQueryTypeValid('update')) {
@@ -76,9 +84,12 @@ class QueryBuilder extends AbstractQueryBuilder
                 return $this->sqlQuery;
             }
         }
-        return false;
     }
 
+    /**
+     * TODO Throw Exception
+     * @inheritDoc
+     */
     public function deleteQuery() : string
     {
         if ($this->isQueryTypeValid('delete')) {
@@ -93,9 +104,12 @@ class QueryBuilder extends AbstractQueryBuilder
 
             return $this->sqlQuery;
         }
-        return false;
     }
 
+    /**
+     * TODO Throw Exception
+     * @inheritDoc
+     */
     public function searchQuery() : string
     {
         if ($this->isQueryTypeValid('search ')) {
@@ -115,9 +129,12 @@ class QueryBuilder extends AbstractQueryBuilder
             }
             return $this->sqlQuery;
         }
-        return false;
     }
 
+    /**
+     * TODO Throw Exception
+     * @inheritDoc
+     */
     public function rawQuery(): string
     {
         if ($this->isQueryTypeValid('raw')) {
@@ -125,9 +142,13 @@ class QueryBuilder extends AbstractQueryBuilder
 
             return $this->sqlQuery;
         }
-        return false;
     }
 
+    /**
+     * TODO COMMENT
+     *
+     * @return string
+     */
     private function hasConditions()
     {
         if (isset($this->key['conditions']) && $this->key['conditions'] !='') {
