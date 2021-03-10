@@ -43,7 +43,7 @@ class Crud implements CrudInterface
      */
     public function getSchema(): string
     {
-        return $this->tableSchema;
+        return (string)$this->tableSchema;
     }
 
     /**
@@ -51,7 +51,7 @@ class Crud implements CrudInterface
      */
     public function getSchemaID(): string
     {
-        return $this->tableSchemaID;
+        return (string)$this->tableSchemaID;
     }
 
     /**
@@ -153,10 +153,25 @@ class Crud implements CrudInterface
 
     /**
      * @inheritDoc
+     * @throws Throwable
      */
     public function rawQuery(string $rawQuery, ?array $conditions = [], string $resultType = 'column')
     {
-        // TODO: Implement rawQuery() method.
+        try {
+            $argc = [
+                'table' => $this->getSchema(),
+                'type' => 'raw',
+                'raw' => $rawQuery,
+                'conditions' => $conditions
+            ];
+            $query = $this->queryBuilder->buildQuery($argc)->rawQuery();
+            $this->dataMapper->persist($query, $this->dataMapper->buildQueryParameters($conditions));
+            if ($this->dataMapper->numRows()) {
+                dd('testing');
+            }
+        } catch (Throwable $throwable) {
+            throw $throwable;
+        }
     }
 
     /**
